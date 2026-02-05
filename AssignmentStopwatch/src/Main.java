@@ -1,103 +1,107 @@
 import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.concurrent.TimeUnit;
 import java.util.Scanner;
-import java.awt.event.ActionEvent;
 
 class StopWatch {
-    Scanner input;
-
-    {
-        input = new Scanner(System.in);
-    }
-
     static int sec;
     static int min;
     static int hour;
     boolean start = true;
-    StopWatch(){
-        sec=min=hour=0;
+    boolean paused = false;
+    Thread stopWatchThread;
+    JLabel timeLabel  = new JLabel("Time");
+    StopWatch() {
+        sec = min = hour = 0;
     }
-    int start() throws InterruptedException {
-        if (!start || hour == 24) {
-            System.out.println(hour + " / " + min + " / " + sec);
-            return 1;
+    void start() throws InterruptedException {
+        while (true) {
+            if (!start) {continue;}
+            TimeUnit.SECONDS.sleep(1);
+            sec++;
+            if (sec == 60) {
+                sec = 0;
+                min++;
+            }
+            if (min == 60) {
+                min = 0;
+                hour++;
+            }
+            setTimeLabel( hour + " / " + min + " / " + sec);
         }
-
-        TimeUnit.SECONDS.sleep(1);
-        System.out.println("hello");
-
-        sec++;
-        if (sec == 60) {
-            sec = 0;
-            min++;
-        }
-        if (min == 60) {
-            min = 0;
-            hour++;
-        }
-
-        System.out.println(hour + " / " + min + " / " + sec);
-        return start();
     }
-
-
-
-
-    void stop(){
+    void stop() {
         start = false;
-
     }
-    String showinfo(){
-        return (hour+" / "+min+" / "+sec);
+    String showinfo() {
+        String info = "";
+        info += hour + " / " + min + " / " + sec;
+        return info;
     }
 
-}
-
-class TestSwing implements ActionListener {
-    public void actionPerformed(ActionEvent e)
-
-    StopWatch swp = new StopWatch();
-    void gui() {
+    synchronized void gui() {
         JFrame frame = new JFrame("Swing Test");
-        JButton button = new JButton("start");
-        JButton button2 = new JButton("stop");
-        button.addActionListener(this);
-//        button2.addActionListener(this);
-
-        frame.setSize(1920, 1080);
+        JButton startButton = new JButton("Start");
+        JButton stopButton = new JButton("Stop/Pause");
+        JButton resetButton = new JButton("reset");
         JPanel panel = new JPanel();
-        panel.setSize(300, 500);
-        JLabel hello = new JLabel();
-        hello.setText(swp.showinfo());
+        panel.add(timeLabel);
+        panel.add(startButton);
+        panel.add(stopButton);
+        panel.add(resetButton);
+        frame.add(panel);
+        frame.setSize(400, 200);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-        panel.add(hello);
-        panel.add(button);
-        frame.add(panel);
-    }
-        button.addActionListener(e -> {
-        swp.start = true;
+        //setting the label
+        // Start button action
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                start = true;
 
-        Thread t = new Thread(() -> {
-            try {
-                swp.start();
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
+                // only start a new thread if none exists or it has finished
+                if (stopWatchThread == null || !stopWatchThread.isAlive()) {
+                    stopWatchThread = new Thread(() -> {
+                        try {
+                            start();  // this is your stopwatch loop
+                        } catch (InterruptedException ex) {
+                            ex.printStackTrace();
+                        }
+                    });
+                    stopWatchThread.start();  // actually start the thread
+                }
             }
         });
-        t.start();
-    });
+
+
+
+        // Stop button action
+        stopButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                start = !start;
+            }
+        });
+        resetButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                sec = 0;
+                hour = 0;
+                min = 0;
+                setTimeLabel( hour + " / " + min + " / " + sec);
+
+            }
+        });
     }
-
-
-
+    void setTimeLabel(String text){
+        timeLabel.setText(text);
+    }
 }
-public class Main  {
+public class Main {
     public static void main(String[] args) throws InterruptedException {
-    TestSwing t1 = new TestSwing();
-    t1.gui();
-
-
+        StopWatch t1 = new StopWatch();
+        t1.gui();
     }
 }
