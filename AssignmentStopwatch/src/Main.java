@@ -8,8 +8,7 @@ class StopWatch {
     static int sec;
     static int min;
     static int hour;
-    boolean start = true;
-    boolean paused = false;
+    boolean start = false;
     Thread stopWatchThread;
     JLabel timeLabel  = new JLabel("Time");
     StopWatch() {
@@ -17,8 +16,8 @@ class StopWatch {
     }
     void start() throws InterruptedException {
         while (true) {
-            if (!start) {continue;}
             TimeUnit.SECONDS.sleep(1);
+            if (!start) {stopWatchThread.sleep(100);continue;}
             sec++;
             if (sec == 60) {
                 sec = 0;
@@ -40,15 +39,13 @@ class StopWatch {
         return info;
     }
 
-    synchronized void gui() {
+    void gui() {
         JFrame frame = new JFrame("Swing Test");
-        JButton startButton = new JButton("Start");
-        JButton stopButton = new JButton("Stop/Pause");
+        JButton startButton = new JButton("Start/Stop");
         JButton resetButton = new JButton("reset");
         JPanel panel = new JPanel();
         panel.add(timeLabel);
         panel.add(startButton);
-        panel.add(stopButton);
         panel.add(resetButton);
         frame.add(panel);
         frame.setSize(400, 200);
@@ -59,7 +56,7 @@ class StopWatch {
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                start = true;
+                start = !start;
 
                 // only start a new thread if none exists or it has finished
                 if (stopWatchThread == null || !stopWatchThread.isAlive()) {
@@ -72,16 +69,6 @@ class StopWatch {
                     });
                     stopWatchThread.start();  // actually start the thread
                 }
-            }
-        });
-
-
-
-        // Stop button action
-        stopButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                start = !start;
             }
         });
         resetButton.addActionListener(new ActionListener() {
