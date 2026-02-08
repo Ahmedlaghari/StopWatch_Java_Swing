@@ -88,6 +88,7 @@ class StopWatch {
     private int min = 0;
     private int hour = 0;
     private boolean running = false;
+    private String History = new string[10];
 
     private final JLabel timeLabel = new JLabel(formatTime());
     private Timer timer;
@@ -109,7 +110,7 @@ class StopWatch {
         });
 
         JFrame frame = new JFrame("Stopwatch");
-        startButton = new JButton("Start/Stop");
+        startButton = new JButton();
         resetButton = new JButton("Reset");
 
         // Apply styling
@@ -134,25 +135,25 @@ class StopWatch {
             running = !running;
             if (running) {
                 timer.start();
+                ButtonStyler.styleStopButton(startButton);
             } else {
                 timer.stop();
+                ButtonStyler.styleStartButton(startButton);
             }
         });
-
         resetButton.addActionListener(e -> {
             running = false;
-            sec = min = hour = 0;
+            centiseconds= sec = min = hour = 0;
             timeLabel.setText(formatTime());
             timer.stop();
         });
-
         timer.start();
     }
 }
 
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new StopWatch().createAndShowGui());
+        SwingUtilities.invokeLater(() -> new StopWatch().createAndShowGui());// Ensure GUI is created on the Event Dispatch Thread
     }
 }
 //i have to update gui . change so that when its running the button goes red and changes to

@@ -3,6 +3,7 @@ import java.awt.*;
 
 class ButtonStyler {
     static void styleStartButton(JButton button) {
+        button.setText("Start");
         button.setBackground(UIConfig.BUTTON_START_BG);
         button.setForeground(UIConfig.BUTTON_FG);
         button.setFont(new Font("Arial", Font.BOLD, UIConfig.BUTTON_FONT_SIZE));
@@ -10,6 +11,16 @@ class ButtonStyler {
         button.setPreferredSize(new Dimension(UIConfig.BUTTON_WIDTH, UIConfig.BUTTON_HEIGHT));
         button.setOpaque(true);
     }
+    static void styleStopButton(JButton button) {
+        button.setText("Stop");
+        button.setBackground(UIConfig.BUTTON_STOP_BG);
+        button.setForeground(UIConfig.BUTTON_FG);
+        button.setFont(new Font("Arial", Font.BOLD, UIConfig.BUTTON_FONT_SIZE));
+        button.setFocusPainted(false);
+        button.setPreferredSize(new Dimension(UIConfig.BUTTON_WIDTH, UIConfig.BUTTON_HEIGHT));
+        button.setOpaque(true);
+    }
+
 
     static void styleResetButton(JButton button) {
         button.setBackground(UIConfig.BUTTON_RESET_BG);
