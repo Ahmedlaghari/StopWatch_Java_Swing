@@ -83,6 +83,7 @@ import java.awt.event.*;
 import java.awt.*;
 
 class StopWatch {
+    private int centiseconds = 0;
     private int sec = 0;
     private int min = 0;
     private int hour = 0;
@@ -94,13 +95,14 @@ class StopWatch {
     private JButton resetButton;
 
     private String formatTime() {
-        return String.format("%02d:%02d:%02d", hour, min, sec);
+        return String.format("%02d:%02d:%02d:%02d", hour, min, sec,centiseconds);
     }
 
     void createAndShowGui() {
-        timer = new Timer(1000, e -> {
+        timer = new Timer(10, e -> {
             if (!running) return;
-            sec++;
+            centiseconds++;
+            if (centiseconds == 60) { centiseconds = 0; sec++; }
             if (sec == 60) { sec = 0; min++; }
             if (min == 60) { min = 0; hour++; }
             timeLabel.setText(formatTime());
