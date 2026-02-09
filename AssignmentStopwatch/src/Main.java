@@ -35,19 +35,20 @@ class StopWatch {
         });
 
         JFrame frame = new JFrame("Stopwatch");
-        frame.setSize(400, 300);
-        frame.setLayout(new BorderLayout(10, 10));
         startButton = new JButton();
         resetButton = new JButton("Reset");
 
         // Scrollable history list
         JScrollPane scrollPane = new JScrollPane(historyList);
-        scrollPane.setPreferredSize(new Dimension(150, 200));
+        scrollPane.setPreferredSize(new Dimension(200, 50));
         historyList.setFont(new Font("Monospaced", Font.PLAIN, 16));
 
         // Apply styling
+        ButtonStyler.styleFrame(frame);
+        ButtonStyler.styleTimeLabel(timeLabel);
         ButtonStyler.styleStartButton(startButton);
         ButtonStyler.styleResetButton(resetButton);
+
         timeLabel.setFont(timeLabel.getFont().deriveFont((float) UIConfig.LABEL_FONT_SIZE));
         timeLabel.setHorizontalAlignment(JLabel.CENTER);
 
