@@ -9,14 +9,11 @@ class StopWatch {
     private int min = 0;
     private int hour = 0;
     private boolean running = false;
-    private ArrayList<String> history = new ArrayList<>();
-
-    private final JLabel timeLabel = new JLabel(formatTime());
+    private JLabel timeLabel = new JLabel(formatTime());
     private Timer timer;
     private JButton startButton;
     private JButton resetButton;
 
-    // Use DefaultListModel for dynamic updates
     private DefaultListModel<String> historyModel = new DefaultListModel<>();
     private JList<String> historyList = new JList<>(historyModel);
 
@@ -35,6 +32,9 @@ class StopWatch {
         });
 
         JFrame frame = new JFrame("Stopwatch");
+        JMenuBar menuBar = new JMenuBar();
+        JPanel panel = new JPanel();
+        JPanel historyPanel = new JPanel();
         startButton = new JButton();
         resetButton = new JButton("Reset");
 
@@ -48,18 +48,17 @@ class StopWatch {
         ButtonStyler.styleTimeLabel(timeLabel);
         ButtonStyler.styleStartButton(startButton);
         ButtonStyler.styleResetButton(resetButton);
-
-        timeLabel.setFont(timeLabel.getFont().deriveFont((float) UIConfig.LABEL_FONT_SIZE));
-        timeLabel.setHorizontalAlignment(JLabel.CENTER);
-
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 20));
+        ButtonStyler.styleList(historyList);
+        ButtonStyler.styleJscrollPane(scrollPane);
+        ButtonStyler.styleMenuBar(menuBar);
+       // ButtonStyler.stylePanel(panel);
+        ButtonStyler.stylePanelWithBorder(panel);
         panel.add(timeLabel);
         panel.add(startButton);
         panel.add(resetButton);
         panel.add(scrollPane);
-
         frame.add(panel);
+        frame.setJMenuBar(menuBar);
         frame.setSize(500, 250); // give a little more room for history
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
@@ -74,22 +73,19 @@ class StopWatch {
                 ButtonStyler.styleStartButton(startButton);
             }
         });
-
         resetButton.addActionListener(e -> {
             running = false;
             // Save current time to history when resetting
             String currentTime = formatTime();
-            history.add(currentTime);
             historyModel.addElement(currentTime);
             centiseconds = sec = min = hour = 0;
+            ButtonStyler.styleStartButton(startButton);
             timeLabel.setText(formatTime());
             timer.stop();
         });
-
         timer.start();
     }
 }
-
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new StopWatch().createAndShowGui());
