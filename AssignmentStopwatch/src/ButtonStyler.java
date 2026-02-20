@@ -14,13 +14,16 @@ class ButtonStyler {
         button.setFont(BUTTON_FONT);
         button.setFocusPainted(false);
         button.setOpaque(true);
-        button.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2)); // subtle border for all buttons
+        button.setBorder(BorderFactory.createLineBorder(new Color(60, 60, 60), 2));
         button.setPreferredSize(BUTTON_SIZE);
     }
 
     static void styleStartButton(JButton button) {
         styleButton(button, UIConfig.BUTTON_START_BG, "Start");
     }
+    static void styleCloseButton(JButton button) {
+            styleButton(button, UIConfig.BUTTON_STOP_BG, "Close");
+        }
 
     static void styleStopButton(JButton button) {
         styleButton(button, UIConfig.BUTTON_STOP_BG, "Stop");
@@ -33,7 +36,7 @@ class ButtonStyler {
     static void styleFrame(JFrame frame) {
         frame.setBackground(new Color(18, 18, 18));
         frame.getContentPane().setBackground(new Color(18, 18, 18));
-        frame.setLayout(new BorderLayout(20, 10)); // unified spacing
+        frame.setLayout(new BorderLayout(20, 10));
     }
 
     static void styleMenuBar(JMenuBar menuBar) {
@@ -50,7 +53,7 @@ class ButtonStyler {
         label.setBorder(BorderFactory.createEmptyBorder(20, 10, 20, 10));
     }
     static void stylePanelWithBorder(JPanel panel) {
-        panel.setBackground(new Color(25, 25, 25)); // dark background
+        panel.setBackground(new Color(25, 25, 25));
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(new Color(50, 50, 50), 3, true), // thick, rounded border
                 BorderFactory.createEmptyBorder(10, 10, 10, 10) // inner padding
